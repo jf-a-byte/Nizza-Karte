@@ -9,15 +9,15 @@
 <style>
 :root{color-scheme:light;--ink:#17212b;--muted:#5b6570;--line:#e4e8ec;--panel:#fff}
 *{box-sizing:border-box}html,body{height:100%;height:100dvh;margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);overflow:hidden;background:#f5f7f9}
-.app{height:100%;height:100dvh;display:flex;flex-direction:column}.top{z-index:1000;background:var(--panel);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;box-shadow:0 2px 8px #00000012;flex:0 0 auto}h1{font-size:18px;line-height:1.2;margin:0 0 4px;font-weight:750}.subtitle{font-size:12px;line-height:1.35;color:var(--muted);margin:0}.tools{display:flex;gap:8px;margin-top:10px}.tools button,.area-button{font:inherit;min-height:42px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);padding:8px 11px;font-size:13px;touch-action:manipulation}.tools button{flex:1;font-weight:650}.tools button:active,.area-button:active{background:#edf2f6}#map{width:100%;flex:1;min-height:0;background:#e8edf0}.sheet{position:absolute;z-index:900;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));max-height:42%;overflow:auto;background:#fffffffa;border:1px solid #dfe5e9;border-radius:15px;box-shadow:0 4px 20px #0002;padding:10px;backdrop-filter:blur(8px)}.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}.sheet-head strong{font-size:13px}.sheet-head button{border:0;background:#eef2f5;border-radius:8px;padding:7px 10px;min-height:34px;font-size:12px}.area-list{display:grid;grid-template-columns:1fr 1fr;gap:6px}.area-button{display:flex;align-items:center;gap:8px;text-align:left;min-width:0;line-height:1.2}.area-button span:last-child{overflow-wrap:anywhere}.swatch{width:13px;height:13px;border-radius:4px;flex:0 0 13px;border:1px solid #0001}.fineprint{font-size:10px;color:var(--muted);margin:8px 2px 1px;line-height:1.35}.status{font-size:12px;color:var(--muted);padding:6px 2px}.leaflet-control-attribution{font-size:9px!important}.leaflet-popup-content-wrapper{border-radius:12px}.leaflet-popup-content{font-size:14px;line-height:1.45;margin:13px 15px;max-width:min(270px,70vw)}.leaflet-popup-content b{font-size:15px}.leaflet-popup-close-button{padding:7px!important}.leaflet-control-zoom a{width:38px!important;height:38px!important;line-height:38px!important;font-size:22px!important}.leaflet-touch .leaflet-bar a{width:38px;height:38px;line-height:38px}
+.app{height:100%;height:100dvh;display:flex;flex-direction:column}.top{z-index:1000;background:var(--panel);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;box-shadow:0 2px 8px #00000012;flex:0 0 auto}h1{font-size:18px;line-height:1.2;margin:0 0 4px;font-weight:750}.subtitle{font-size:12px;line-height:1.35;color:var(--muted);margin:0}.tools{display:flex;gap:8px;margin-top:10px}.tools button,.area-button{font:inherit;min-height:42px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);padding:8px 11px;font-size:13px;touch-action:manipulation}.tools button{flex:1;font-weight:650}.tools button:active,.area-button:active{background:#edf2f6}#map{width:100%;flex:1;min-height:0;background:#e8edf0}.sheet{position:absolute;z-index:900;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));max-height:42%;overflow:auto;background:#fffffffa;border:1px solid #dfe5e9;border-radius:15px;box-shadow:0 4px 20px #0002;padding:10px;backdrop-filter:blur(8px)}.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}.sheet-head strong{font-size:13px}.sheet-head button{border:0;background:#eef2f5;border-radius:8px;padding:7px 10px;min-height:34px;font-size:12px}.area-list{display:grid;grid-template-columns:1fr 1fr;gap:6px}.area-button input{width:18px;height:18px;flex:0 0 18px;margin:0;accent-color:#2563eb}.area-button.is-hidden{opacity:.62}.area-button{display:flex;align-items:center;gap:8px;text-align:left;min-width:0;line-height:1.2}.area-button span:last-child{overflow-wrap:anywhere}.swatch{width:13px;height:13px;border-radius:4px;flex:0 0 13px;border:1px solid #0001}.fineprint{font-size:10px;color:var(--muted);margin:8px 2px 1px;line-height:1.35}.status{font-size:12px;color:var(--muted);padding:6px 2px}.leaflet-control-attribution{font-size:9px!important}.leaflet-popup-content-wrapper{border-radius:12px}.leaflet-popup-content{font-size:14px;line-height:1.45;margin:13px 15px;max-width:min(270px,70vw)}.leaflet-popup-content b{font-size:15px}.transport-tools{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 8px}.transport-tools label{display:flex;align-items:center;gap:7px;font-size:12px;line-height:1.25;padding:7px 8px;border:1px solid var(--line);border-radius:9px;background:#fff}.transport-tools input{width:17px;height:17px;accent-color:#2563eb}.stop-icon{display:flex;align-items:center;justify-content:center;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 5px #0005;font-size:11px;font-weight:800;color:#fff}.stop-icon.tram{background:#7c3aed}.stop-icon.bus{background:#087e8b}.transport-status{font-size:10px;color:var(--muted);line-height:1.3;margin:0 2px 8px}.leaflet-popup-close-button{padding:7px!important}.leaflet-control-zoom a{width:38px!important;height:38px!important;line-height:38px!important;font-size:22px!important}.leaflet-touch .leaflet-bar a{width:38px;height:38px;line-height:38px}
 @media(min-width:700px){.top{padding:16px 20px}.sheet{left:18px;right:auto;bottom:18px;width:320px;max-height:55%}h1{font-size:21px}.subtitle{font-size:13px}}
 @media(max-height:560px){.top{padding-top:6px;padding-bottom:6px}.tools{margin-top:6px}.tools button{min-height:34px}.sheet{max-height:32%;bottom:5px}.fineprint{display:none}}
 </style>
 </head>
 <body><div class="app">
-<header class="top"><h1>Nizza – offizielle Viertelkarte</h1><p class="subtitle">Offizielle Quartiergrenzen der Métropole Nice Côte d’Azur. Tippe auf ein Viertel, um den Namen anzuzeigen.</p><div class="tools"><button id="fit">Alle Viertel anzeigen</button><button id="toggle">Viertelliste ausblenden</button></div></header>
+<header class="top"><h1>Nizza – offizielle Viertelkarte</h1><p class="subtitle">Offizielle Quartiergrenzen der Métropole Nice Côte d’Azur. Tippe auf ein Viertel, um den offiziellen Namen und bekannte Alternativnamen anzuzeigen.</p><div class="tools"><button id="fit">Alle Viertel anzeigen</button><button id="toggle">Viertelliste ausblenden</button></div></header>
 <div id="map" aria-label="Interaktive Karte der offiziellen Quartiere von Nizza"></div>
-<section class="sheet" id="sheet" aria-label="Viertelliste"><div class="sheet-head"><strong>Offizielle Viertel auswählen</strong><button id="close-list">Ausblenden</button></div><div id="status" class="status">Offizielle Viertelgrenzen werden geladen …</div><div class="area-list" id="area-list"></div><p class="fineprint">Grenzdaten: Métropole Nice Côte d’Azur, Ebene „Quartier“ (CODE INSEE 06088 = Gemeinde Nizza). Kartengrundlage © OpenStreetMap-Mitwirkende.</p></section>
+<section class="sheet" id="sheet" aria-label="Viertelliste"><div class="sheet-head"><strong>Viertel ein-/ausblenden</strong><button id="close-list">Liste ausblenden</button></div><div id="status" class="status">Häkchen entfernen, um Viertel auf der Karte auszublenden.</div><div class="transport-tools" aria-label="Haltestellen einblenden"><label><input id="show-tram" type="checkbox"> Tram-Haltestellen</label><label><input id="show-bus" type="checkbox"> Bus-Haltestellen</label></div><p id="transport-status" class="transport-status">ÖPNV-Haltestellen bei Bedarf laden; die Daten stammen aus OpenStreetMap.</p><div class="area-list" id="area-list"></div><p class="fineprint">Grenzdaten: Métropole Nice Côte d’Azur, Ebene „Quartier“ (CODE INSEE 06088 = Gemeinde Nizza). Kartengrundlage und Haltestellen: © OpenStreetMap-Mitwirkende. Alternativnamen sind ergänzende geläufige Bezeichnungen und nicht amtliche Grenznamen.</p></section>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
@@ -25,21 +25,112 @@ const map=L.map('map',{zoomControl:true,tap:true}).setView([43.7034,7.2663],12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap-Mitwirkende'}).addTo(map);
 const colors=['#6baed6','#fd8d3c','#74c476','#9e9ac8','#fb6a4a','#6baed6','#fdae6b','#31a354','#bc80bd','#80b1d3','#fdb462','#b3de69','#fccde5','#bebada','#8dd3c7','#ffed6f','#ccebc5','#ffb3ba','#c7ceea','#d9b38c'];
 const polygons=[];const list=document.getElementById('area-list');const status=document.getElementById('status');
+const tramLayer=L.layerGroup(),busLayer=L.layerGroup();
+let transportLoaded=false,transportLoading=false;
+const transportStatus=document.getElementById('transport-status');
+// Gebräuchliche Namen/Bezeichnungen; bewusst nur dort ergänzt, wo die Zuordnung hinreichend geläufig ist.
+const aliases={
+ 'Thiers':['Quartier des Musiciens','Musiciens-Viertel','Musiker-Viertel'],
+ 'Vieille Ville':['Vieux Nice','Altstadt von Nizza'],
+ 'Le Port':['Port Lympia','Hafenviertel'],
+ 'Jean Médecin':['Jean-Médecin','Avenue Jean-Médecin'],
+ 'Médecin':['Jean-Médecin','Quartier Jean-Médecin'],
+ 'Libération':['Quartier de la Libération'],
+ 'Riquier':['Quartier Riquier'],
+ 'Cimiez':['Colline de Cimiez'],
+ 'Carré d’Or':['Carré d’Or','Goldenes Viertel (ungefähre Bezeichnung)'],
+ 'Baumettes':['Quartier des Baumettes'],
+ 'Saint-Roch':['Quartier Saint-Roch'],
+ 'Saint-Augustin':['Quartier Saint-Augustin'],
+ 'Saint-Barthélémy':['Saint-Barthélemy','Quartier Saint-Barthélemy'],
+ 'Saint-Philippe':['Quartier Saint-Philippe'],
+ 'Parc Impérial':['Parc Impérial','Kaiserpark-Viertel'],
+ 'Ariane':['L’Ariane'],
+ 'Arénas':['L’Arénas','Geschäftsviertel Arenas'],
+ 'Mont Boron':['Mont Boron','Colline du Mont Boron'],
+ 'Mont Alban':['Mont Alban','Fort du Mont Alban'],
+ 'Fabron':['Quartier de Fabron'],
+ 'Magnan':['Quartier de Magnan'],
+ 'Gambetta':['Quartier Gambetta'],
+ 'Pessicart':['Quartier de Pessicart'],
+ 'Saint-Isidore':['Quartier Saint-Isidore'],
+ 'Saint-Sylvestre':['Quartier Saint-Sylvestre'],
+ 'Las Planas':['Quartier de Las Planas'],
+ 'Gairaut':['Quartier de Gairaut'],
+ 'Rimiez':['Quartier de Rimiez'],
+ 'Lingostière':['Quartier de Lingostière'],
+ 'Caucade':['Quartier de Caucade'],
+ 'Pasteur':['Quartier Pasteur'],
+ 'Le Ray':['Quartier du Ray']
+};
+function alternateNames(name){
+ const key=Object.keys(aliases).find(k=>k.localeCompare(name,'fr',{sensitivity:'base'})===0);
+ return key?aliases[key]:[];
+}
+function makeStopIcon(kind){
+ return L.divIcon({className:'',html:`<span class="stop-icon ${kind}">${kind==='tram'?'T':'B'}</span>`,iconSize:[22,22],iconAnchor:[11,11],popupAnchor:[0,-10]});
+}
+function setTransportStatus(message){transportStatus.textContent=message;}
+function loadTransport(){
+ if(transportLoaded||transportLoading)return;
+ transportLoading=true;setTransportStatus('Haltestellen werden geladen …');
+ // OSM/Overpass: räumlich auf das Stadtgebiet von Nizza begrenzt. Nur beim ersten Einschalten abgerufen.
+ const query='[out:json][timeout:25];(node[railway=tram_stop](43.65,7.17,43.79,7.34);node[public_transport=platform][tram=yes](43.65,7.17,43.79,7.34);node[highway=bus_stop](43.65,7.17,43.79,7.34);node[public_transport=platform][bus=yes](43.65,7.17,43.79,7.34);way[railway=tram_stop](43.65,7.17,43.79,7.34);way[highway=bus_stop](43.65,7.17,43.79,7.34););out center tags;';
+ fetch('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(query))
+ .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+ .then(data=>{
+  const seen=new Set();let tramCount=0,busCount=0;
+  (data.elements||[]).forEach(el=>{
+   const tags=el.tags||{},lat=el.lat??el.center?.lat,lon=el.lon??el.center?.lon;
+   if(typeof lat!=='number'||typeof lon!=='number')return;
+   const isTram=tags.railway==='tram_stop'||tags.tram==='yes'||tags['tram:yes']==='yes'||tags.tramway==='yes';
+   const isBus=tags.highway==='bus_stop'||tags.bus==='yes'||tags.public_transport==='platform';
+   const kind=isTram?'tram':'bus';
+   if(!isTram&&!isBus)return;
+   const id=kind+':'+(el.id||`${lat},${lon}`);
+   if(seen.has(id))return;seen.add(id);
+   const name=tags.name||tags.ref||(kind==='tram'?'Tram-Haltestelle':'Bushaltestelle');
+   const marker=L.marker([lat,lon],{icon:makeStopIcon(kind),title:name,keyboard:true});
+   marker.bindPopup(`<b>${escapeHtml(name)}</b><br>${kind==='tram'?'Tram-Haltestelle':'Bushaltestelle'}${tags.ref?'<br>Linie/Referenz: '+escapeHtml(tags.ref):''}<br><span style="font-size:10px;color:#59636e">Kartendaten: © OpenStreetMap-Mitwirkende</span>`);
+   marker.addTo(kind==='tram'?tramLayer:busLayer);
+   if(kind==='tram')tramCount++;else busCount++;
+  });
+  transportLoaded=true;transportLoading=false;
+  if(document.getElementById('show-tram').checked)tramLayer.addTo(map);
+  if(document.getElementById('show-bus').checked)busLayer.addTo(map);
+  setTransportStatus(`${tramCount} Tram- und ${busCount} Bus-Haltestellen geladen. Datenstand und Abdeckung hängen von OpenStreetMap ab.`);
+ })
+ .catch(err=>{
+  console.error(err);transportLoading=false;
+  setTransportStatus('Haltestellen konnten gerade nicht geladen werden. Bitte später erneut versuchen; dafür wird eine Verbindung zu Overpass/ OpenStreetMap benötigt.');
+ });
+}
+document.getElementById('show-tram').addEventListener('change',e=>{if(e.target.checked){loadTransport();if(transportLoaded)tramLayer.addTo(map);}else map.removeLayer(tramLayer);});
+document.getElementById('show-bus').addEventListener('change',e=>{if(e.target.checked){loadTransport();if(transportLoaded)busLayer.addTo(map);}else map.removeLayer(busLayer);});
 const queryUrl='https://cartes.nicecotedazur.org/heberge/rest/services/Limites_administratives/MapServer/10/query?where=CODE_INSEE%3D%2706088%27&outFields=QUARTIER,CODE_INSEE,IDENT&returnGeometry=true&outSR=4326&f=geojson';
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function fitAll(){if(polygons.length){map.fitBounds(L.featureGroup(polygons).getBounds(),{padding:[25,25]});}}
+function fitAll(){const visible=polygons.filter(p=>map.hasLayer(p));if(visible.length){map.fitBounds(L.featureGroup(visible).getBounds(),{padding:[25,25]});}}
 fetch(queryUrl).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(data=>{
  if(!data.features||!data.features.length)throw new Error('Der Kartendienst hat keine Viertel zurückgegeben.');
  const features=data.features.filter(f=>!f.properties?.CODE_INSEE||String(f.properties.CODE_INSEE)==='06088');
  features.sort((a,b)=>String(a.properties?.QUARTIER||'').localeCompare(String(b.properties?.QUARTIER||''),'fr'));
  features.forEach((feature,i)=>{
   const name=feature.properties?.QUARTIER||('Viertel '+(i+1));const color=colors[i%colors.length];
-  const p=L.geoJSON(feature,{style:{color:'#ffffff',weight:1.8,opacity:1,fillColor:color,fillOpacity:.58}}).addTo(map);
-  p.bindPopup(`<b>${escapeHtml(name)}</b><br><span style="font-size:11px;color:#59636e">Offizielle Quartiergrenze</span>`,{maxWidth:290});p.bindTooltip(escapeHtml(name),{sticky:true});polygons.push(p);
-  const b=document.createElement('button');b.className='area-button';b.innerHTML=`<span class="swatch" style="background:${color}"></span><span>${escapeHtml(name)}</span>`;b.addEventListener('click',()=>{map.fitBounds(p.getBounds(),{padding:[35,35],maxZoom:16});p.openPopup();});list.appendChild(b);
+  const p=L.geoJSON(feature,{style:{color:'#ffffff',weight:1.8,opacity:1,fillColor:color,fillOpacity:.18}}).addTo(map);
+  const alt=alternateNames(name);
+  const aliasHtml=alt.length?`<div style="margin-top:5px"><span style="font-size:11px;color:#59636e">Auch bekannt als</span><br>${alt.map(escapeHtml).join(' · ')}</div>`:'';
+  p.bindPopup(`<b>${escapeHtml(name)}</b>${aliasHtml}<br><span style="font-size:11px;color:#59636e">Offizielle Quartiergrenze</span>`,{maxWidth:290});p.bindTooltip(escapeHtml(name),{sticky:true});polygons.push(p);
+  const label=document.createElement('label');label.className='area-button';
+  const checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.checked=true;checkbox.setAttribute('aria-label',name+' auf der Karte anzeigen');
+  const swatch=document.createElement('span');swatch.className='swatch';swatch.style.background=color;
+  const text=document.createElement('span');text.textContent=name;
+  label.append(checkbox,swatch,text);
+  checkbox.addEventListener('change',()=>{if(checkbox.checked){p.addTo(map);label.classList.remove('is-hidden');}else{map.removeLayer(p);label.classList.add('is-hidden');}});
+  label.addEventListener('click',event=>{if(event.target===swatch||event.target===text){if(checkbox.checked){map.fitBounds(p.getBounds(),{padding:[35,35],maxZoom:16});p.openPopup();}}});
+  list.appendChild(label);
  });
  if(!polygons.length)throw new Error('Für die Gemeinde Nizza wurden keine Viertel gefunden.');
- status.textContent=features.length+' offizielle Viertel geladen.';fitAll();
+ status.textContent=features.length+' Viertel geladen. Häkchen entfernen, um Viertel auszublenden.';fitAll();
 }).catch(err=>{console.error(err);status.textContent='Die offiziellen Daten konnten nicht geladen werden. Bitte prüfe die Internetverbindung oder versuche es später erneut.';});
 document.getElementById('fit').addEventListener('click',fitAll);
 const sheet=document.getElementById('sheet'),toggle=document.getElementById('toggle');function hideList(hide){sheet.hidden=hide;toggle.textContent=hide?'Viertelliste anzeigen':'Viertelliste ausblenden';setTimeout(()=>map.invalidateSize(),80)}toggle.addEventListener('click',()=>hideList(!sheet.hidden));document.getElementById('close-list').addEventListener('click',()=>hideList(true));
