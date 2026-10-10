@@ -17,7 +17,7 @@
 <body><div class="app">
 <header class="top"><h1>Nizza – offizielle Viertelkarte</h1><p class="subtitle">Offizielle Quartiergrenzen der Métropole Nice Côte d’Azur. Tippe auf ein Viertel, um den offiziellen Namen und bekannte Alternativnamen anzuzeigen.</p><div class="tools"><button id="fit">Alle Viertel anzeigen</button><button id="toggle">Viertelliste ausblenden</button></div></header>
 <div id="map" aria-label="Interaktive Karte der offiziellen Quartiere von Nizza"></div>
-<section class="sheet" id="sheet" aria-label="Viertelliste"><div class="sheet-head"><strong>Viertel ein-/ausblenden</strong><button id="close-list">Liste ausblenden</button></div><div id="status" class="status">Häkchen entfernen, um Viertel auf der Karte auszublenden.</div><div class="transport-tools" aria-label="Haltestellen einblenden"><label><input id="show-tram" type="checkbox"> Tram-Haltestellen</label><label><input id="show-bus" type="checkbox"> Bus-Haltestellen</label></div><p id="transport-status" class="transport-status">ÖPNV-Haltestellen bei Bedarf laden; die Daten stammen aus OpenStreetMap.</p><div class="area-list" id="area-list"></div><p class="fineprint">Grenzdaten: Métropole Nice Côte d’Azur, Ebene „Quartier“ (CODE INSEE 06088 = Gemeinde Nizza). Kartengrundlage und Haltestellen: © OpenStreetMap-Mitwirkende. Alternativnamen sind ergänzende geläufige Bezeichnungen und nicht amtliche Grenznamen.</p></section>
+<section class="sheet" id="sheet" aria-label="Viertelliste"><div class="sheet-head"><strong>Viertel ein-/ausblenden</strong><button id="close-list">Liste ausblenden</button></div><div id="status" class="status">Häkchen entfernen, um Viertel auf der Karte auszublenden.</div><div class="transport-tools" aria-label="Haltestellen einblenden"><label><input id="show-tram" type="checkbox"> Tram-Haltestellen</label><label><input id="show-tram-lines" type="checkbox"> Tram-Linien</label><label><input id="show-bus" type="checkbox"> Bus-Haltestellen</label></div><p id="transport-status" class="transport-status">ÖPNV-Haltestellen bei Bedarf laden; die Daten stammen aus OpenStreetMap.</p><div class="area-list" id="area-list"></div><p class="fineprint">Grenzdaten: Métropole Nice Côte d’Azur, Ebene „Quartier“ (CODE INSEE 06088 = Gemeinde Nizza). Kartengrundlage und Haltestellen: © OpenStreetMap-Mitwirkende. Alternativnamen sind ergänzende geläufige Bezeichnungen und nicht amtliche Grenznamen.</p></section>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
@@ -25,7 +25,7 @@ const map=L.map('map',{zoomControl:true,tap:true}).setView([43.7034,7.2663],12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap-Mitwirkende'}).addTo(map);
 const colors=['#6baed6','#fd8d3c','#74c476','#9e9ac8','#fb6a4a','#6baed6','#fdae6b','#31a354','#bc80bd','#80b1d3','#fdb462','#b3de69','#fccde5','#bebada','#8dd3c7','#ffed6f','#ccebc5','#ffb3ba','#c7ceea','#d9b38c'];
 const polygons=[];const list=document.getElementById('area-list');const status=document.getElementById('status');
-const tramLayer=L.layerGroup(),busLayer=L.layerGroup();
+const tramLayer=L.layerGroup(),busLayer=L.layerGroup(),tramLinesLayer=L.layerGroup();
 let transportLoaded=false,transportLoading=false;
 const transportStatus=document.getElementById('transport-status');
 // Gebräuchliche Namen/Bezeichnungen; bewusst nur dort ergänzt, wo die Zuordnung hinreichend geläufig ist.
@@ -75,13 +75,24 @@ function loadTransport(){
  if(transportLoaded||transportLoading)return;
  transportLoading=true;setTransportStatus('Haltestellen werden geladen …');
  // OSM/Overpass: räumlich auf das Stadtgebiet von Nizza begrenzt. Nur beim ersten Einschalten abgerufen.
- const query='[out:json][timeout:25];(node[railway=tram_stop](43.65,7.17,43.79,7.34);node[public_transport=platform][tram=yes](43.65,7.17,43.79,7.34);node[highway=bus_stop](43.65,7.17,43.79,7.34);node[public_transport=platform][bus=yes](43.65,7.17,43.79,7.34);way[railway=tram_stop](43.65,7.17,43.79,7.34);way[highway=bus_stop](43.65,7.17,43.79,7.34););out center tags;';
+ const query='[out:json][timeout:35];(node[railway=tram_stop](43.65,7.17,43.79,7.34);node[public_transport=platform][tram=yes](43.65,7.17,43.79,7.34);node[highway=bus_stop](43.65,7.17,43.79,7.34);node[public_transport=platform][bus=yes](43.65,7.17,43.79,7.34);way[railway=tram_stop](43.65,7.17,43.79,7.34);way[highway=bus_stop](43.65,7.17,43.79,7.34);way[railway=tram](43.65,7.17,43.79,7.34););out geom;';
  fetch('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(query))
  .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
  .then(data=>{
-  const seen=new Set();let tramCount=0,busCount=0;
+  const seen=new Set();let tramCount=0,busCount=0,tramLineCount=0;
   (data.elements||[]).forEach(el=>{
-   const tags=el.tags||{},lat=el.lat??el.center?.lat,lon=el.lon??el.center?.lon;
+   const tags=el.tags||{};
+   // Tram-Gleise als Linienzug darstellen; nur echte Geometrien mit mindestens zwei Punkten verwenden.
+   if(el.type==='way'&&tags.railway==='tram'&&Array.isArray(el.geometry)&&el.geometry.length>1){
+    const coords=el.geometry.filter(pt=>typeof pt.lat==='number'&&typeof pt.lon==='number').map(pt=>[pt.lat,pt.lon]);
+    if(coords.length>1){
+     const line=L.polyline(coords,{color:'#7c3aed',weight:4,opacity:.88,lineCap:'round',lineJoin:'round'});
+     line.bindPopup(`<b>Tram-Linie / Gleis</b>${tags.name?'<br>'+escapeHtml(tags.name):''}${tags.ref?'<br>Referenz: '+escapeHtml(tags.ref):''}<br><span style="font-size:10px;color:#59636e">Gleisverlauf aus OpenStreetMap; nicht zwingend ein vollständiger Linienverlauf</span>`);
+     line.addTo(tramLinesLayer);tramLineCount++;
+    }
+    return;
+   }
+   const lat=el.lat??el.center?.lat,lon=el.lon??el.center?.lon;
    if(typeof lat!=='number'||typeof lon!=='number')return;
    const isTram=tags.railway==='tram_stop'||tags.tram==='yes'||tags['tram:yes']==='yes'||tags.tramway==='yes';
    const isBus=tags.highway==='bus_stop'||tags.bus==='yes'||tags.public_transport==='platform';
@@ -97,8 +108,9 @@ function loadTransport(){
   });
   transportLoaded=true;transportLoading=false;
   if(document.getElementById('show-tram').checked)tramLayer.addTo(map);
+  if(document.getElementById('show-tram-lines').checked)tramLinesLayer.addTo(map);
   if(document.getElementById('show-bus').checked)busLayer.addTo(map);
-  setTransportStatus(`${tramCount} Tram- und ${busCount} Bus-Haltestellen geladen. Datenstand und Abdeckung hängen von OpenStreetMap ab.`);
+  setTransportStatus(`${tramCount} Tram-, ${tramLineCount} Tram-Gleisabschnitte und ${busCount} Bus-Haltestellen geladen. Die Gleise zeigen OSM-Streckenabschnitte, nicht garantiert vollständige Linienverläufe.`);
  })
  .catch(err=>{
   console.error(err);transportLoading=false;
@@ -106,6 +118,7 @@ function loadTransport(){
  });
 }
 document.getElementById('show-tram').addEventListener('change',e=>{if(e.target.checked){loadTransport();if(transportLoaded)tramLayer.addTo(map);}else map.removeLayer(tramLayer);});
+document.getElementById('show-tram-lines').addEventListener('change',e=>{if(e.target.checked){loadTransport();if(transportLoaded)tramLinesLayer.addTo(map);}else map.removeLayer(tramLinesLayer);});
 document.getElementById('show-bus').addEventListener('change',e=>{if(e.target.checked){loadTransport();if(transportLoaded)busLayer.addTo(map);}else map.removeLayer(busLayer);});
 const queryUrl='https://cartes.nicecotedazur.org/heberge/rest/services/Limites_administratives/MapServer/10/query?where=CODE_INSEE%3D%2706088%27&outFields=QUARTIER,CODE_INSEE,IDENT&returnGeometry=true&outSR=4326&f=geojson';
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -116,7 +129,7 @@ fetch(queryUrl).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.jso
  features.sort((a,b)=>String(a.properties?.QUARTIER||'').localeCompare(String(b.properties?.QUARTIER||''),'fr'));
  features.forEach((feature,i)=>{
   const name=feature.properties?.QUARTIER||('Viertel '+(i+1));const color=colors[i%colors.length];
-  const p=L.geoJSON(feature,{style:{color:'#ffffff',weight:1.8,opacity:1,fillColor:color,fillOpacity:.18}}).addTo(map);
+  const p=L.geoJSON(feature,{style:{color:'#ffffff',weight:1.8,opacity:1,fillColor:color,fillOpacity:map.getZoom()>=16?0:.42}}).addTo(map);
   const alt=alternateNames(name);
   const aliasHtml=alt.length?`<div style="margin-top:5px"><span style="font-size:11px;color:#59636e">Auch bekannt als</span><br>${alt.map(escapeHtml).join(' · ')}</div>`:'';
   p.bindPopup(`<b>${escapeHtml(name)}</b>${aliasHtml}<br><span style="font-size:11px;color:#59636e">Offizielle Quartiergrenze</span>`,{maxWidth:290});p.bindTooltip(escapeHtml(name),{sticky:true});polygons.push(p);
@@ -134,5 +147,12 @@ fetch(queryUrl).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.jso
 }).catch(err=>{console.error(err);status.textContent='Die offiziellen Daten konnten nicht geladen werden. Bitte prüfe die Internetverbindung oder versuche es später erneut.';});
 document.getElementById('fit').addEventListener('click',fitAll);
 const sheet=document.getElementById('sheet'),toggle=document.getElementById('toggle');function hideList(hide){sheet.hidden=hide;toggle.textContent=hide?'Viertelliste anzeigen':'Viertelliste ausblenden';setTimeout(()=>map.invalidateSize(),80)}toggle.addEventListener('click',()=>hideList(!sheet.hidden));document.getElementById('close-list').addEventListener('click',()=>hideList(true));
-map.whenReady(()=>setTimeout(()=>map.invalidateSize(),100));window.addEventListener('orientationchange',()=>setTimeout(()=>map.invalidateSize(),250));
+// Bei Stadtzoom sind die Flächen kräftiger; ab Zoom 16 verschwindet nur die Füllung,
+ // damit OSM-Symbole und Straßennamen besser lesbar bleiben. Die Viertelgrenzen bleiben sichtbar.
+function updatePolygonFill(){
+ const opacity=map.getZoom()>=16?0:.42;
+ polygons.forEach(p=>p.setStyle({fillOpacity:opacity}));
+}
+map.on('zoomend',updatePolygonFill);
+map.whenReady(()=>setTimeout(()=>{map.invalidateSize();updatePolygonFill();},100));window.addEventListener('orientationchange',()=>setTimeout(()=>map.invalidateSize(),250));
 </script></body></html>
