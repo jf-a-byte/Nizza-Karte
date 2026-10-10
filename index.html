@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Nizza – Viertelkarte für Mobilgeräte</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<style>
+:root{color-scheme:light;--ink:#17212b;--muted:#5b6570;--line:#e4e8ec;--panel:#fff}
+*{box-sizing:border-box}html,body{height:100%;height:100dvh;margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);overflow:hidden;background:#f5f7f9}
+.app{height:100%;height:100dvh;display:flex;flex-direction:column}.top{z-index:1000;background:var(--panel);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;box-shadow:0 2px 8px #00000012;flex:0 0 auto}h1{font-size:18px;line-height:1.2;margin:0 0 4px;font-weight:750}.subtitle{font-size:12px;line-height:1.35;color:var(--muted);margin:0}.tools{display:flex;gap:8px;margin-top:10px}.tools button,.area-button{font:inherit;min-height:42px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);padding:8px 11px;font-size:13px;touch-action:manipulation}.tools button{flex:1;font-weight:650}.tools button:active,.area-button:active{background:#edf2f6}#map{width:100%;flex:1;min-height:0;background:#e8edf0}.sheet{position:absolute;z-index:900;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));max-height:42%;overflow:auto;background:#fffffffa;border:1px solid #dfe5e9;border-radius:15px;box-shadow:0 4px 20px #0002;padding:10px;backdrop-filter:blur(8px)}.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}.sheet-head strong{font-size:13px}.sheet-head button{border:0;background:#eef2f5;border-radius:8px;padding:7px 10px;min-height:34px;font-size:12px}.area-list{display:grid;grid-template-columns:1fr 1fr;gap:6px}.area-button{display:flex;align-items:center;gap:8px;text-align:left;min-width:0;line-height:1.2}.area-button span:last-child{overflow-wrap:anywhere}.swatch{width:13px;height:13px;border-radius:4px;flex:0 0 13px;border:1px solid #0001}.fineprint{font-size:10px;color:var(--muted);margin:8px 2px 1px;line-height:1.35}.leaflet-control-attribution{font-size:9px!important}.leaflet-popup-content-wrapper{border-radius:12px}.leaflet-popup-content{font-size:14px;line-height:1.45;margin:13px 15px;max-width:min(270px,70vw)}.leaflet-popup-content b{font-size:15px}.leaflet-popup-close-button{padding:7px!important}.leaflet-control-zoom a{width:38px!important;height:38px!important;line-height:38px!important;font-size:22px!important}.leaflet-touch .leaflet-bar a{width:38px;height:38px;line-height:38px}
+@media(min-width:700px){.top{padding:16px 20px}.sheet{left:18px;right:auto;bottom:18px;width:320px;max-height:55%}h1{font-size:21px}.subtitle{font-size:13px}}
+@media(max-height:560px){.top{padding-top:6px;padding-bottom:6px}.tools{margin-top:6px}.tools button{min-height:34px}.sheet{max-height:32%;bottom:5px}.fineprint{display:none}}
+</style>
+</head>
+<body><div class="app">
+<header class="top"><h1>Nizza – interaktive Viertelkarte</h1><p class="subtitle">Tippe auf eine farbige Fläche oder wähle ein Viertel unten aus.</p><div class="tools"><button id="fit">Alle Viertel anzeigen</button><button id="toggle">Viertelliste ausblenden</button></div></header>
+<div id="map" aria-label="Interaktive Karte der touristischen Viertel von Nizza"></div>
+<section class="sheet" id="sheet" aria-label="Viertelliste"><div class="sheet-head"><strong>Viertel auswählen</strong><button id="close-list">Ausblenden</button></div><div class="area-list" id="area-list"></div><p class="fineprint">Die farbigen Flächen sind schematische touristische Orientierungsbereiche, keine amtlichen Stadtteilgrenzen. Kartendaten © OpenStreetMap-Mitwirkende.</p></section>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+const areas=[
+{name:'Vieux Nice – Altstadt',color:'#20b8b0',desc:'Historische Gassen, Cours Saleya, Märkte, Restaurants und barocke Kirchen. Besonders gut zu Fuß erkunden.',coords:[[43.7049,7.2690],[43.7068,7.2720],[43.7049,7.2785],[43.7005,7.2780],[43.6995,7.2730],[43.7017,7.2680]]},
+{name:'Carré d’Or & Zentrum',color:'#4387e8',desc:'Zentrale Einkaufsstraßen, Cafés und elegante Architektur rund um Jean-Médecin, Masséna und die angrenzenden Straßen.',coords:[[43.7048,7.2585],[43.7100,7.2630],[43.7092,7.2710],[43.7045,7.2700],[43.7018,7.2670],[43.7008,7.2605]]},
+{name:'Promenade des Anglais',color:'#f2c94c',desc:'Küstenpromenade, Strände und Meerblick. Ein langgestreckter Uferbereich; die Markierung dient nur der Orientierung.',coords:[[43.7008,7.2520],[43.7040,7.2560],[43.7045,7.2700],[43.7005,7.2780],[43.6965,7.2705],[43.6958,7.2570]]},
+{name:'Port Lympia',color:'#f2994a',desc:'Alter Hafen mit Booten, Cafés und Restaurants. Gute Verbindung zwischen Altstadt und den östlichen Küstenbereichen.',coords:[[43.7000,7.2800],[43.7048,7.2790],[43.7075,7.2860],[43.7032,7.2910],[43.6990,7.2875]]},
+{name:'Libération',color:'#36a66b',desc:'Lebendiges Marktviertel rund um Gare du Sud und Place du Général-de-Gaulle, mit lokalen Geschäften und Alltagsleben.',coords:[[43.7100,7.2580],[43.7160,7.2590],[43.7180,7.2675],[43.7130,7.2730],[43.7092,7.2710],[43.7095,7.2630]]},
+{name:'Cimiez',color:'#9b78d1',desc:'Ruhigeres, höher gelegenes Viertel mit römischen Überresten, Gärten und Musée Matisse. Für den Weg bergauf Zeit einplanen.',coords:[[43.7180,7.2675],[43.7240,7.2700],[43.7290,7.2810],[43.7220,7.2890],[43.7145,7.2800],[43.7130,7.2730]]},
+{name:'Mont Boron',color:'#df5d65',desc:'Grüner Höhenzug östlich des Hafens mit Villen, Spazierwegen und weiten Ausblicken auf die Küste.',coords:[[43.7040,7.2910],[43.7090,7.2950],[43.7105,7.3040],[43.7030,7.3070],[43.6985,7.2970]]},
+{name:'Quartier des Musiciens – Musikerviertel',color:'#c65b9c',desc:'Elegantes Wohnviertel westlich der Avenue Jean-Médecin, bekannt für Straßen mit Musikernamen wie Rue Verdi, Rue Gounod und Rue Berlioz. Gute Lage zwischen Bahnhof Nice-Ville und dem Zentrum.',coords:[[43.7048,7.2550],[43.7082,7.2572],[43.7080,7.2642],[43.7045,7.2660],[43.7008,7.2635],[43.7005,7.2570]]}
+];
+const map=L.map('map',{zoomControl:true,tap:true}).setView([43.708,7.278],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap-Mitwirkende'}).addTo(map);
+const polygons=[];const list=document.getElementById('area-list');
+areas.forEach((a,i)=>{const p=L.polygon(a.coords,{color:a.color,weight:2,fillColor:a.color,fillOpacity:.38}).addTo(map);p.bindPopup(`<b>${a.name}</b><br>${a.desc}<p style="font-size:11px;color:#59636e;margin:7px 0 0">Schematische touristische Abgrenzung – keine amtliche Grenze.</p>`,{maxWidth:290});p.bindTooltip(a.name,{sticky:true});polygons.push(p);const b=document.createElement('button');b.className='area-button';b.innerHTML=`<span class="swatch" style="background:${a.color}"></span><span>${a.name}</span>`;b.addEventListener('click',()=>{map.fitBounds(p.getBounds(),{padding:[35,35],maxZoom:15});p.openPopup();});list.appendChild(b);});
+function fitAll(){const group=L.featureGroup(polygons);map.fitBounds(group.getBounds(),{padding:[25,25]});}
+document.getElementById('fit').addEventListener('click',fitAll);
+const sheet=document.getElementById('sheet'),toggle=document.getElementById('toggle');function hideList(hide){sheet.hidden=hide;toggle.textContent=hide?'Viertelliste anzeigen':'Viertelliste ausblenden';setTimeout(()=>map.invalidateSize(),80)}toggle.addEventListener('click',()=>hideList(!sheet.hidden));document.getElementById('close-list').addEventListener('click',()=>hideList(true));
+map.whenReady(()=>setTimeout(()=>map.invalidateSize(),100));window.addEventListener('orientationchange',()=>setTimeout(()=>map.invalidateSize(),250));
+</script></body></html>
